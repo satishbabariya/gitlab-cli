@@ -24,6 +24,7 @@ package cmd
 import (
 	"fmt"
 	"os"
+	"strings"
 
 	"github.com/spf13/cobra"
 
@@ -94,7 +95,7 @@ func initConfig() {
 		}
 
 		// confirm where the file has been read in from
-		fmt.Println(viper.ConfigFileUsed())
+		// fmt.Println(viper.ConfigFileUsed())
 	}
 
 	viper.AutomaticEnv() // read in environment variables that match
@@ -103,4 +104,13 @@ func initConfig() {
 	if err := viper.ReadInConfig(); err == nil {
 		fmt.Println("Using config file:", viper.ConfigFileUsed())
 	}
+}
+
+func consoleLog(title string, content string, prefix string) {
+	fmt.Printf("%s:\n", title)
+	fmt.Println(strings.Repeat("-", len(title)+1))
+	for _, line := range strings.Split(content, "\n") {
+		fmt.Printf("%s%s\n", prefix, line)
+	}
+	fmt.Println()
 }

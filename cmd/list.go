@@ -23,8 +23,12 @@ package cmd
 
 import (
 	"fmt"
+	"os"
 
 	"github.com/spf13/cobra"
+	"github.com/xanzy/go-gitlab"
+
+	"github.com/jedib0t/go-pretty/list"
 )
 
 // listCmd represents the list command
@@ -33,20 +37,43 @@ var listCmd = &cobra.Command{
 	Short: "list all your projects",
 	Long:  `Get a list of all visible projects across GitLab for the authenticated user. When accessed without authentication, only public projects with “simple” fields are returned.`,
 	Run: func(cmd *cobra.Command, args []string) {
-		fmt.Println("list called")
+
+		listAllProjects()
 	},
 }
+
+var token string
 
 func init() {
 	rootCmd.AddCommand(listCmd)
 
-	// Here you will define your flags and configuration settings.
+	listCmd.Flags().StringVarP(&token, "token", "t", "", "Enter your personal access token")
+	listCmd.MarkFlagRequired("token")
+}
 
-	// Cobra supports Persistent Flags which will work for this command
-	// and all subcommands, e.g.:
-	// listCmd.PersistentFlags().String("foo", "", "A help for foo")
+func listAllProjects() {
+	var client = gitlab.NewClient(nil, token)
+	opt := &gitlab.ListProjectsOptions{
+		Owned:      gitlab.Bool(true),
+		Membership: gitlab.Bool(true),
+	}
+	projects, _, err := client.Projects.ListProjects(opt)
 
-	// Cobra supports local flags which will only run when this command
-	// is called directly, e.g.:
-	// listCmd.Flags().BoolP("toggle", "t", false, "Help message for toggle")
+	if err != nil {
+		fmt.Println(err)
+		os.Exit(1)
+	}
+
+	if len(projects) == 0 {
+		fmt.Println("No Projects Found")
+		os.Exit(0)
+	}
+
+	l := list.NewWriter()
+	for _, project := range projects {
+		l.AppendItem(project.Name)
+	}
+	l.SetStyle(list.StyleBulletCircle)
+	fmt.Println("\n")
+	consoleLog("List all your projects", l.Render(), "")
 }
