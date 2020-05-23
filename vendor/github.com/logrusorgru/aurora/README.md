@@ -13,6 +13,28 @@ Ultimate ANSI colors for Golang. The package supports Printf/Sprintf etc.
 
 ![aurora logo](https://github.com/logrusorgru/aurora/blob/master/gopher_aurora.png)
 
+# TOC
+
+- [Installation](#installation)
+- [Usage](#usage)
+  + [Simple](#simple)
+  + [Printf](#printf)
+  + [aurora.Sprintf](#aurorasprintf)
+  + [Enable/Disable colors](#enabledisable-colors)
+- [Chains](#chains)
+- [Colorize](#colorize)
+- [Grayscale](#grayscale)
+- [8-bit colors](#8-bit-colors)
+- [Supported Colors & Formats](#supported-colors--formats)
+  + [All colors](#all-colors)
+  + [Standard and bright colors](#standard-and-bright-colors)
+  + [Formats are likely supported](#formats-are-likely-supported)
+  + [Formats are likely unsupported](#formats-are-likely-unsupported)
+- [Limitations](#limitations)
+  + [Windows](#windows)
+  + [TTY](#tty)
+- [Licensing](#licensing)
+
 # Installation
 
 Get
@@ -214,7 +236,7 @@ Methods `Index` and `BgIndex` implements 8-bit colors.
   + red
   + green
   + yellow (brown)
-  +  blue
+  + blue
   + magenta
   + cyan
   + white
@@ -267,6 +289,20 @@ aurora.value %!p(aurora.value={0xc42000a310 768 0})
 ```
 
 The obvious workaround is `Red(fmt.Sprintf("%T", some))`
+
+### Windows
+
+The Aurora provides ANSI colors only, so there is no support for Windows. That said, there are workarounds available. 
+Check out these comments to learn more:
+
+- [Using go-colorable](https://github.com/logrusorgru/aurora/issues/2#issuecomment-299014211).
+- [Using registry for Windows 10](https://github.com/logrusorgru/aurora/issues/10#issue-476361247).
+
+### TTY
+
+The Aurora has no internal TTY detectors by design. Take a look
+ [this comment](https://github.com/logrusorgru/aurora/issues/2#issuecomment-299030108) if you want turn
+on colors for a terminal only, and turn them off for a file.
 
 ### Licensing
 
