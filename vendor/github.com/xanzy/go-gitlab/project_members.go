@@ -44,7 +44,7 @@ type ListProjectMembersOptions struct {
 //
 // GitLab API docs:
 // https://docs.gitlab.com/ce/api/members.html#list-all-members-of-a-group-or-project
-func (s *ProjectMembersService) ListProjectMembers(pid interface{}, opt *ListProjectMembersOptions, options ...OptionFunc) ([]*ProjectMember, *Response, error) {
+func (s *ProjectMembersService) ListProjectMembers(pid interface{}, opt *ListProjectMembersOptions, options ...RequestOptionFunc) ([]*ProjectMember, *Response, error) {
 	project, err := parseID(pid)
 	if err != nil {
 		return nil, nil, err
@@ -71,7 +71,7 @@ func (s *ProjectMembersService) ListProjectMembers(pid interface{}, opt *ListPro
 //
 // GitLab API docs:
 // https://docs.gitlab.com/ce/api/members.html#list-all-members-of-a-group-or-project-including-inherited-members
-func (s *ProjectMembersService) ListAllProjectMembers(pid interface{}, opt *ListProjectMembersOptions, options ...OptionFunc) ([]*ProjectMember, *Response, error) {
+func (s *ProjectMembersService) ListAllProjectMembers(pid interface{}, opt *ListProjectMembersOptions, options ...RequestOptionFunc) ([]*ProjectMember, *Response, error) {
 	project, err := parseID(pid)
 	if err != nil {
 		return nil, nil, err
@@ -96,7 +96,7 @@ func (s *ProjectMembersService) ListAllProjectMembers(pid interface{}, opt *List
 //
 // GitLab API docs:
 // https://docs.gitlab.com/ce/api/members.html#get-a-member-of-a-group-or-project
-func (s *ProjectMembersService) GetProjectMember(pid interface{}, user int, options ...OptionFunc) (*ProjectMember, *Response, error) {
+func (s *ProjectMembersService) GetProjectMember(pid interface{}, user int, options ...RequestOptionFunc) (*ProjectMember, *Response, error) {
 	project, err := parseID(pid)
 	if err != nil {
 		return nil, nil, err
@@ -124,6 +124,7 @@ func (s *ProjectMembersService) GetProjectMember(pid interface{}, user int, opti
 type AddProjectMemberOptions struct {
 	UserID      *int              `url:"user_id,omitempty" json:"user_id,omitempty"`
 	AccessLevel *AccessLevelValue `url:"access_level,omitempty" json:"access_level,omitempty"`
+	ExpiresAt   *string           `url:"expires_at,omitempty" json:"expires_at"`
 }
 
 // AddProjectMember adds a user to a project team. This is an idempotent
@@ -133,7 +134,7 @@ type AddProjectMemberOptions struct {
 //
 // GitLab API docs:
 // https://docs.gitlab.com/ce/api/members.html#add-a-member-to-a-group-or-project
-func (s *ProjectMembersService) AddProjectMember(pid interface{}, opt *AddProjectMemberOptions, options ...OptionFunc) (*ProjectMember, *Response, error) {
+func (s *ProjectMembersService) AddProjectMember(pid interface{}, opt *AddProjectMemberOptions, options ...RequestOptionFunc) (*ProjectMember, *Response, error) {
 	project, err := parseID(pid)
 	if err != nil {
 		return nil, nil, err
@@ -160,13 +161,14 @@ func (s *ProjectMembersService) AddProjectMember(pid interface{}, opt *AddProjec
 // https://docs.gitlab.com/ce/api/members.html#edit-a-member-of-a-group-or-project
 type EditProjectMemberOptions struct {
 	AccessLevel *AccessLevelValue `url:"access_level,omitempty" json:"access_level,omitempty"`
+	ExpiresAt   *string           `url:"expires_at,omitempty" json:"expires_at"`
 }
 
 // EditProjectMember updates a project team member to a specified access level..
 //
 // GitLab API docs:
 // https://docs.gitlab.com/ce/api/members.html#edit-a-member-of-a-group-or-project
-func (s *ProjectMembersService) EditProjectMember(pid interface{}, user int, opt *EditProjectMemberOptions, options ...OptionFunc) (*ProjectMember, *Response, error) {
+func (s *ProjectMembersService) EditProjectMember(pid interface{}, user int, opt *EditProjectMemberOptions, options ...RequestOptionFunc) (*ProjectMember, *Response, error) {
 	project, err := parseID(pid)
 	if err != nil {
 		return nil, nil, err
@@ -191,7 +193,7 @@ func (s *ProjectMembersService) EditProjectMember(pid interface{}, user int, opt
 //
 // GitLab API docs:
 // https://docs.gitlab.com/ce/api/members.html#remove-a-member-from-a-group-or-project
-func (s *ProjectMembersService) DeleteProjectMember(pid interface{}, user int, options ...OptionFunc) (*Response, error) {
+func (s *ProjectMembersService) DeleteProjectMember(pid interface{}, user int, options ...RequestOptionFunc) (*Response, error) {
 	project, err := parseID(pid)
 	if err != nil {
 		return nil, err

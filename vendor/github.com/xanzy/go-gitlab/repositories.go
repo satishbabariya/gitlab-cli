@@ -20,6 +20,7 @@ import (
 	"bytes"
 	"fmt"
 	"io"
+	"net/url"
 )
 
 // RepositoriesService handles communication with the repositories related
@@ -60,7 +61,7 @@ type ListTreeOptions struct {
 //
 // GitLab API docs:
 // https://docs.gitlab.com/ce/api/repositories.html#list-repository-tree
-func (s *RepositoriesService) ListTree(pid interface{}, opt *ListTreeOptions, options ...OptionFunc) ([]*TreeNode, *Response, error) {
+func (s *RepositoriesService) ListTree(pid interface{}, opt *ListTreeOptions, options ...RequestOptionFunc) ([]*TreeNode, *Response, error) {
 	project, err := parseID(pid)
 	if err != nil {
 		return nil, nil, err
@@ -86,12 +87,12 @@ func (s *RepositoriesService) ListTree(pid interface{}, opt *ListTreeOptions, op
 //
 // GitLab API docs:
 // https://docs.gitlab.com/ce/api/repositories.html#get-a-blob-from-repository
-func (s *RepositoriesService) Blob(pid interface{}, sha string, options ...OptionFunc) ([]byte, *Response, error) {
+func (s *RepositoriesService) Blob(pid interface{}, sha string, options ...RequestOptionFunc) ([]byte, *Response, error) {
 	project, err := parseID(pid)
 	if err != nil {
 		return nil, nil, err
 	}
-	u := fmt.Sprintf("projects/%s/repository/blobs/%s", pathEscape(project), sha)
+	u := fmt.Sprintf("projects/%s/repository/blobs/%s", pathEscape(project), url.PathEscape(sha))
 
 	req, err := s.client.NewRequest("GET", u, nil, options)
 	if err != nil {
@@ -111,12 +112,12 @@ func (s *RepositoriesService) Blob(pid interface{}, sha string, options ...Optio
 //
 // GitLab API docs:
 // https://docs.gitlab.com/ce/api/repositories.html#raw-blob-content
-func (s *RepositoriesService) RawBlobContent(pid interface{}, sha string, options ...OptionFunc) ([]byte, *Response, error) {
+func (s *RepositoriesService) RawBlobContent(pid interface{}, sha string, options ...RequestOptionFunc) ([]byte, *Response, error) {
 	project, err := parseID(pid)
 	if err != nil {
 		return nil, nil, err
 	}
-	u := fmt.Sprintf("projects/%s/repository/blobs/%s/raw", pathEscape(project), sha)
+	u := fmt.Sprintf("projects/%s/repository/blobs/%s/raw", pathEscape(project), url.PathEscape(sha))
 
 	req, err := s.client.NewRequest("GET", u, nil, options)
 	if err != nil {
@@ -145,7 +146,7 @@ type ArchiveOptions struct {
 //
 // GitLab API docs:
 // https://docs.gitlab.com/ce/api/repositories.html#get-file-archive
-func (s *RepositoriesService) Archive(pid interface{}, opt *ArchiveOptions, options ...OptionFunc) ([]byte, *Response, error) {
+func (s *RepositoriesService) Archive(pid interface{}, opt *ArchiveOptions, options ...RequestOptionFunc) ([]byte, *Response, error) {
 	project, err := parseID(pid)
 	if err != nil {
 		return nil, nil, err
@@ -176,7 +177,7 @@ func (s *RepositoriesService) Archive(pid interface{}, opt *ArchiveOptions, opti
 //
 // GitLab API docs:
 // https://docs.gitlab.com/ce/api/repositories.html#get-file-archive
-func (s *RepositoriesService) StreamArchive(pid interface{}, w io.Writer, opt *ArchiveOptions, options ...OptionFunc) (*Response, error) {
+func (s *RepositoriesService) StreamArchive(pid interface{}, w io.Writer, opt *ArchiveOptions, options ...RequestOptionFunc) (*Response, error) {
 	project, err := parseID(pid)
 	if err != nil {
 		return nil, err
@@ -226,7 +227,7 @@ type CompareOptions struct {
 //
 // GitLab API docs:
 // https://docs.gitlab.com/ce/api/repositories.html#compare-branches-tags-or-commits
-func (s *RepositoriesService) Compare(pid interface{}, opt *CompareOptions, options ...OptionFunc) (*Compare, *Response, error) {
+func (s *RepositoriesService) Compare(pid interface{}, opt *CompareOptions, options ...RequestOptionFunc) (*Compare, *Response, error) {
 	project, err := parseID(pid)
 	if err != nil {
 		return nil, nil, err
@@ -265,12 +266,16 @@ func (c Contributor) String() string {
 // ListContributorsOptions represents the available ListContributors() options.
 //
 // GitLab API docs: https://docs.gitlab.com/ce/api/repositories.html#contributors
-type ListContributorsOptions ListOptions
+type ListContributorsOptions struct {
+	ListOptions
+	OrderBy *string `url:"order_by,omitempty" json:"order_by,omitempty"`
+	Sort    *string `url:"sort,omitempty" json:"sort,omitempty"`
+}
 
 // Contributors gets the repository contributors list.
 //
 // GitLab API docs: https://docs.gitlab.com/ce/api/repositories.html#contributors
-func (s *RepositoriesService) Contributors(pid interface{}, opt *ListContributorsOptions, options ...OptionFunc) ([]*Contributor, *Response, error) {
+func (s *RepositoriesService) Contributors(pid interface{}, opt *ListContributorsOptions, options ...RequestOptionFunc) ([]*Contributor, *Response, error) {
 	project, err := parseID(pid)
 	if err != nil {
 		return nil, nil, err
@@ -304,7 +309,7 @@ type MergeBaseOptions struct {
 //
 // GitLab API docs:
 // https://docs.gitlab.com/ce/api/repositories.html#merge-base
-func (s *RepositoriesService) MergeBase(pid interface{}, opt *MergeBaseOptions, options ...OptionFunc) (*Commit, *Response, error) {
+func (s *RepositoriesService) MergeBase(pid interface{}, opt *MergeBaseOptions, options ...RequestOptionFunc) (*Commit, *Response, error) {
 	project, err := parseID(pid)
 	if err != nil {
 		return nil, nil, err

@@ -20,10 +20,7 @@ incompatible changes that were needed to fully support the V4 Gitlab API.
 This API client package covers most of the existing Gitlab API calls and is updated regularly
 to add new and/or missing endpoints. Currently the following services are supported:
 
-- [ ] Discussions (threaded comments)
-- [ ] Epic Issues
-- [ ] Epics
-- [ ] Geo Nodes
+- [x] Applications
 - [x] Award Emojis
 - [x] Branches
 - [x] Broadcast Messages
@@ -32,9 +29,13 @@ to add new and/or missing endpoints. Currently the following services are suppor
 - [x] Custom Attributes
 - [x] Deploy Keys
 - [x] Deployments
+- [ ] Discussions (threaded comments)
 - [x] Environments
+- [ ] Epic Issues
+- [ ] Epics
 - [x] Events
 - [x] Feature Flags
+- [ ] Geo Nodes
 - [x] GitLab CI Config Templates
 - [x] Gitignores Templates
 - [x] Group Access Requests
@@ -96,16 +97,29 @@ access different parts of the GitLab API. For example, to list all
 users:
 
 ```go
-git := gitlab.NewClient(nil, "yourtokengoeshere")
-//git.SetBaseURL("https://git.mydomain.com/api/v3")
-users, _, err := git.Users.ListUsers()
+git, err := gitlab.NewClient("yourtokengoeshere")
+if err != nil {
+  log.Fatalf("Failed to create client: %v", err)
+}
+users, _, err := git.Users.ListUsers(&gitlab.ListUsersOptions{})
+```
+
+There are a few `With...` option functions that can be used to customize
+the API client. For example, to set a custom base URL:
+
+```go
+git, err := gitlab.NewClient("yourtokengoeshere", WithBaseURL("https://git.mydomain.com/api/v4"))
+if err != nil {
+  log.Fatalf("Failed to create client: %v", err)
+}
+users, _, err := git.Users.ListUsers(&gitlab.ListUsersOptions{})
 ```
 
 Some API methods have optional parameters that can be passed. For example,
 to list all projects for user "svanharmelen":
 
 ```go
-git := gitlab.NewClient(nil)
+git := gitlab.NewClient("yourtokengoeshere")
 opt := &ListProjectsOptions{Search: gitlab.String("svanharmelen")}
 projects, _, err := git.Projects.ListProjects(opt)
 ```
@@ -125,7 +139,10 @@ import (
 )
 
 func main() {
-	git := gitlab.NewClient(nil, "yourtokengoeshere")
+	git, err := gitlab.NewClient("yourtokengoeshere")
+	if err != nil {
+		log.Fatalf("Failed to create client: %v", err)
+	}
 
 	// Create new project
 	p := &gitlab.CreateProjectOptions{
@@ -166,7 +183,7 @@ For complete usage of go-gitlab, see the full [package docs](https://godoc.org/g
 
 ## Author
 
-Sander van Harmelen (<sander@xanzy.io>)
+Sander van Harmelen (<sander@vanharmelen.nl>)
 
 ## License
 
