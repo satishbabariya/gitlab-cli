@@ -1,5 +1,5 @@
 # GitLab CLI
-A command-line tool that makes git easier to use with GitLab. (Backup/Clone all your repositories with one command)
+A command-line tool that makes it easier to Backup/Clone all your repositories from GitLab.
 
 
 ```
