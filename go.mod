@@ -10,6 +10,6 @@ require (
 	github.com/mitchellh/go-homedir v1.1.0
 	github.com/spf13/cobra v0.0.5
 	github.com/spf13/viper v1.4.0
-	github.com/xanzy/go-gitlab v0.18.0
+	github.com/xanzy/go-gitlab v0.38.2
 	gopkg.in/src-d/go-git.v4 v4.12.0
 )
