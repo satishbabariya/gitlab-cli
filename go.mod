@@ -9,7 +9,7 @@ require (
 	github.com/logrusorgru/aurora v0.0.0-20190428105938-cea283e61946
 	github.com/mattn/go-runewidth v0.0.4 // indirect
 	github.com/mitchellh/go-homedir v1.1.0
-	github.com/spf13/cobra v1.1.1
+	github.com/spf13/cobra v1.1.3
 	github.com/spf13/viper v1.7.0
 	github.com/ugorji/go v1.1.4 // indirect
 	github.com/xanzy/go-gitlab v0.40.2
