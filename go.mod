@@ -12,7 +12,7 @@ require (
 	github.com/spf13/cobra v1.1.1
 	github.com/spf13/viper v1.7.0
 	github.com/ugorji/go v1.1.4 // indirect
-	github.com/xanzy/go-gitlab v0.40.2
+	github.com/xanzy/go-gitlab v0.47.0
 	github.com/xordataexchange/crypt v0.0.3-0.20170626215501-b2862e3d0a77 // indirect
 	gopkg.in/src-d/go-git.v4 v4.12.0
 )
